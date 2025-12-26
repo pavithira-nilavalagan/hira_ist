@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Attendance - HIRA IST</title>
+  <link rel="icon" type="image/x-icon" href="../static/image/hira_logo.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <div class="max-w-md mx-auto mt-12 p-6">
+
+    <h2 class="text-3xl font-bold text-pink-600 mb-6 text-center">
+      Upload Student Attendance
+    </h2>
+
+    
+
+    <form method="POST" class="bg-white p-6 rounded-xl shadow-lg space-y-4">
+
+      <!-- Register Number -->
+      <input name="register_no" id="register_no"
+        placeholder="Register Number" required
+        onblur="fetchDepartment()"
+        class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-pink-500 outline-none">
+
+      <!-- Department (Auto Filled) -->
+      <input name="department" id="department"
+        placeholder="Department"
+        readonly
+        class="w-full border bg-gray-100 rounded px-3 py-2">
+
+      <input name="semester" placeholder="Semester" required
+        class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-pink-500 outline-none">
+
+      <input name="subject" placeholder="Subject Name" required
+        class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-pink-500 outline-none">
+
+      <input name="total" type="number" placeholder="Total Classes" required
+        class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-pink-500 outline-none">
+
+      <input name="attended" type="number" placeholder="Attended Classes" required
+        class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-pink-500 outline-none">
+
+      <button
+        class="w-full bg-pink-600 text-white py-2 rounded-lg font-medium hover:bg-pink-700 transition">
+        Upload Attendance
+      </button>
+
+    </form>
+
+  </div>
+
+  <!-- JS -->
+  <script>
+    function fetchDepartment() {
+      const regNo = document.getElementById("register_no").value;
+      if (!regNo) return;
+
+      fetch(`/get-student-department/${regNo}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("department").value =
+            data.department ? data.department : "Not Found";
+        });
+    }
+  </script>
+
+</body>
+</html>

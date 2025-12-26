@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Queries - HIRA IST</title>
+  <link rel="icon" type="image/x-icon" href="../static/image/hira_logo.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+<div class="max-w-6xl mx-auto p-6">
+
+  <h2 class="text-3xl font-bold text-red-600 mb-6">
+    Student Queries
+  </h2>
+
+
+
+  <div class="bg-white p-6 rounded-lg shadow space-y-6">
+
+    <!-- Overview & Instructions -->
+    <div class="space-y-2">
+      <p class="text-gray-700">
+        The <strong>Queries</strong> section allows you to view and respond to questions or requests
+        submitted by students. Queries can relate to profile updates, attendance, results, or other academic concerns.
+      </p>
+
+      <ul class="list-disc list-inside text-gray-700 space-y-1">
+        <li><strong>View Queries:</strong> See all pending and resolved queries submitted by students.</li>
+        <li><strong>Reply to Queries:</strong> Respond to student questions directly through the system. Pending queries will have a reply form.</li>
+        <li><strong>Edit Profile Requests:</strong> For queries related to profile updates, you can navigate to the student profile to make corrections.</li>
+        <li><strong>Status Tracking:</strong> Track which queries are <em>Pending</em> or <em>Replied</em>.</li>
+      </ul>
+
+      <p class="text-gray-700">
+        Make sure to respond to pending queries promptly. Accurate and timely replies improve student satisfaction
+        and maintain the integrity of student records.
+      </p>
+    </div>
+
+  </div>
+
+
+  {% for q in queries %}
+  <div class="bg-white rounded-xl shadow-md p-6 mb-6 border-l-4
+    {% if q.status == 'Pending' %} border-red-500 {% else %} border-green-500 {% endif %} mt-10">
+
+    <!-- Header -->
+    <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700 mb-4">
+      <p><span class="font-semibold">Name:</span> {{ q.name }}</p>
+      <p><span class="font-semibold">Register No:</span> {{ q.register_no }}</p>
+      <p><span class="font-semibold">Department:</span> {{ q.department }}</p>
+      <p><span class="font-semibold">Batch:</span> {{ q.batch }}</p>
+      <p><span class="font-semibold">Type:</span> {{ q.query_type }}</p>
+      <p>
+        <span class="font-semibold">Status:</span>
+        <span class="px-2 py-1 rounded text-white text-xs
+          {% if q.status == 'Pending' %} bg-red-500 {% else %} bg-green-500 {% endif %}">
+          {{ q.status }}
+        </span>
+      </p>
+    </div>
+
+    <!-- Message -->
+    <div class="bg-gray-50 p-4 rounded mb-4">
+      <p class="font-semibold text-gray-800 mb-1">Student Query</p>
+      <p class="text-gray-700">{{ q.message }}</p>
+    </div>
+
+    <!-- Edit Profile Button (Only if Pending & Profile Query) -->
+    {% if q.query_type == "Profile" and q.status == "Pending" %}
+      <a href="/admin/edit-profile/{{ q.register_no }}"
+        class="inline-block mb-4 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
+        Edit Profile
+      </a>
+    {% endif %}
+
+    {% if q.status == "Pending" %}
+      <!-- Reply Form -->
+      <form method="POST" action="/admin/reply/{{ q._id }}" class="space-y-3">
+        <textarea name="reply" rows="3" required
+          placeholder="Type admin reply here..."
+          class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none"></textarea>
+
+        <button type="submit"
+          class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">
+          Send Reply
+        </button>
+      </form>
+    {% else %}
+      <!-- Reply -->
+      <div class="bg-green-50 p-4 rounded mt-4 border border-green-200">
+        <p class="font-semibold text-green-700 mb-1">Admin Reply</p>
+        <p class="text-gray-800">{{ q.reply }}</p>
+      </div>
+    {% endif %}
+
+  </div>
+  {% endfor %}
+
+</div>
+
+</body>
+</html>

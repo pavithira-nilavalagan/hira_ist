@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance - HIRA IST</title>
+  <link rel="icon" type="image/x-icon" href="../static/image/hira_logo.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-indigo-50 via-white to-indigo-100 min-h-screen">
+
+<div class="max-w-5xl mx-auto p-6">
+
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <h2 class="text-4xl font-bold text-indigo-700">Attendance Report</h2>
+    <p class="text-gray-600 mt-1">Semester-wise Attendance Overview</p>
+  </div>
+
+  <!-- Attendance Table -->
+  <div class="bg-white rounded-xl shadow-lg overflow-x-auto">
+    <table class="min-w-full border-collapse">
+      <thead class="bg-indigo-100 text-indigo-700">
+        <tr>
+          <th class="px-4 py-3 border">Subject</th>
+          <th class="px-4 py-3 border">Semester</th>
+          <th class="px-4 py-3 border">Total Classes</th>
+          <th class="px-4 py-3 border">Attended</th>
+          <th class="px-4 py-3 border">Percentage</th>
+          <th class="px-4 py-3 border">Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for a in data %}
+        <tr class="text-center hover:bg-gray-50 transition">
+          <td class="border px-4 py-2 font-medium">{{ a.subject }}</td>
+          <td class="border px-4 py-2">{{ a.semester }}</td>
+          <td class="border px-4 py-2">{{ a.total_classes }}</td>
+          <td class="border px-4 py-2">{{ a.attended_classes }}</td>
+
+          <!-- Percentage with progress -->
+          <td class="border px-4 py-2">
+            <div class="flex flex-col items-center gap-1">
+              <span class="font-semibold">{{ a.attendance_percentage
+}}%</span>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class="h-2 rounded-full
+                  {% if a.attendance_percentage >= 95 %}
+                    bg-green-600
+                  {% elif a.attendance_percentage >= 85 %}
+                    bg-blue-500
+                  {% elif a.attendance_percentage >= 75 %}
+                    bg-yellow-500
+                  {% else %}
+                    bg-red-500
+                  {% endif %}"
+                  style="width: {{ a.attendance_percentage }}%">
+                </div>
+              </div>
+            </div>
+          </td>
+
+          <!-- Attendance Status -->
+          <td class="border px-4 py-2">
+            {% if a.attendance_percentage >= 95 %}
+              <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">Excellent</span>
+            {% elif a.attendance_percentage >= 85 %}
+              <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium">Good</span>
+            {% elif a.attendance_percentage >= 75 %}
+              <span class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-sm font-medium">Average</span>
+            {% else %}
+              <span class="px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm font-medium">Shortage</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Legend -->
+  <div class="mt-6 bg-white rounded-xl shadow p-4 text-sm text-gray-600">
+    <p><b>Attendance Criteria:</b></p>
+    <ul class="list-disc ml-6 mt-2 space-y-1">
+      <li><span class="text-green-600 font-medium">≥ 95%</span> – Excellent (O)</li>
+      <li><span class="text-blue-600 font-medium">85% – 94%</span> – Good (M)</li>
+      <li><span class="text-yellow-600 font-medium">75% – 84%</span> – Average (S)</li>
+      <li><span class="text-red-600 font-medium">&lt; 75%</span> – Attendance Shortage (U)</li>
+    </ul>
+  </div>
+
+</div>
+
+</body>
+</html>

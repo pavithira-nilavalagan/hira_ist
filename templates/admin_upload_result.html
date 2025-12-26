@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Student Results - HIRA IST</title>
+  <link rel="icon" type="image/x-icon" href="../static/image/hira_logo.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+<div class="max-w-4xl mx-auto p-6">
+  <h2 class="text-3xl font-bold text-indigo-600 mb-6 text-center">
+    Upload Semester Result
+  </h2>
+
+  <div class="bg-white p-6 rounded-lg shadow-md">
+    <form method="POST" class="space-y-4" enctype="multipart/form-data">
+
+      <!-- Excel Upload -->
+      <div class="mb-4">
+        <label class="block font-semibold mb-2">Upload Excel File</label>
+        <input type="file" id="excelFile" accept=".xlsx, .xls" class="border rounded px-3 py-2 w-full"
+               onchange="readExcelFile(event)">
+      </div>
+
+      <!-- Student Details -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <input name="register_no" id="register_no"
+               placeholder="Register Number" required
+               onblur="fetchDepartment()"
+               class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-indigo-500">
+
+        <input name="semester" id="semester"
+               placeholder="Semester" required
+               class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-indigo-500">
+
+        <input name="department" id="department"
+               placeholder="Department"
+               readonly
+               class="border bg-gray-100 rounded px-3 py-2 w-full">
+      </div>
+
+      <hr class="my-4">
+
+      <!-- Subjects -->
+      {% for i in range(1,6) %}
+      <div class="border p-4 rounded-lg shadow-sm">
+        <h4 class="font-semibold mb-2">Subject {{ i }}</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-6 gap-3">
+          <input name="code{{i}}" id="code{{i}}" placeholder="Subject Code" class="border rounded px-2 py-1" required>
+          <input name="name{{i}}" id="name{{i}}" placeholder="Subject Name" 
+                 class="border rounded px-2 py-1"
+                 oninput="fetchAttendance({{i}})" required>
+          <input name="credit{{i}}" id="credit{{i}}" type="number" placeholder="Credits" class="border rounded px-2 py-1" required>
+          <input name="grade_point{{i}}" id="grade_point{{i}}" type="number" min="0" max="10"
+                 placeholder="Grade Point" class="border rounded px-2 py-1"
+                 oninput="updateGrade({{i}})" required>
+          <input name="grade{{i}}" id="grade{{i}}" placeholder="Grade" class="border rounded px-2 py-1" readonly>
+          <input name="att{{i}}" id="att{{i}}" type="number" placeholder="Attendance %" class="border rounded px-2 py-1" readonly>
+        </div>
+      </div>
+      {% endfor %}
+
+      <div class="text-center mt-6">
+        <button type="submit"
+                class="bg-indigo-600 text-white px-6 py-2 rounded-lg shadow hover:bg-indigo-700">
+          Upload Result
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+const GRADE_POINTS = {
+  "O": 10, "A+": 9, "A": 8, "B+": 7,
+  "B": 6, "C": 5, "U": 0, "W": 0
+};
+
+function getGradeFromPoint(point) {
+  for (let [grade, value] of Object.entries(GRADE_POINTS)) {
+    if (value === Number(point)) return grade;
+  }
+  return "U";
+}
+
+function updateGrade(index) {
+  const gp = document.getElementById(`grade_point${index}`).value;
+  document.getElementById(`grade${index}`).value = getGradeFromPoint(gp);
+}
+
+function fetchDepartment() {
+  const regNo = document.getElementById("register_no").value;
+  if (!regNo) return;
+
+  fetch(`/get-student-department/${regNo}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("department").value = data.department || "Not Found";
+      for (let i = 1; i <= 5; i++) document.getElementById(`att${i}`).value = 0;
+    });
+}
+
+function fetchAttendance(index) {
+  const regNo = document.getElementById("register_no").value;
+  const semester = document.getElementById("semester").value;
+  const subject = document.getElementById(`name${index}`).value;
+
+  if (!regNo || !semester || !subject) return;
+
+  fetch(`/get-student-attendance/${regNo}/${semester}/${subject}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById(`att${index}`).value = data.percentage ?? 0;
+    });
+}
+
+// Read Excel file and populate form
+function readExcelFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, {type: "array"});
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(worksheet, {header:1});
+
+    if(jsonData.length >= 2){
+      document.getElementById("register_no").value = jsonData[0][0] || '';
+      document.getElementById("semester").value = jsonData[0][1] || '';
+
+      // Call fetchDepartment() to auto-fill department
+      fetchDepartment();
+
+      for(let i=0; i<5; i++){
+        const row = jsonData[i+1] || [];
+        document.getElementById(`code${i+1}`).value = row[0] || '';
+        document.getElementById(`name${i+1}`).value = row[1] || '';
+        document.getElementById(`credit${i+1}`).value = row[2] || '';
+        document.getElementById(`grade_point${i+1}`).value = row[3] || '';
+        document.getElementById(`grade${i+1}`).value = getGradeFromPoint(row[3]) || '';
+        document.getElementById(`att${i+1}`).value = row[4] || 0;
+      }
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+</script>
+
+</body>
+</html>

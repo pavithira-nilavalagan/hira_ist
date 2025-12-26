@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Queries | HIRA IST</title>
+    <link rel="icon" type="image/x-icon" href="../static/image/hira_logo.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen font-sans">
+
+<div class="max-w-4xl mx-auto p-6">
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+    <div>
+      <h2 class="text-3xl font-bold text-indigo-700">My Queries</h2>
+      <p class="text-gray-600">Track your academic & administrative requests</p>
+    </div>
+
+    <!-- New Query Button -->
+    <a href="/student/query"
+       class="mt-4 sm:mt-0 inline-flex items-center gap-2 bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition shadow">
+      ➕ New Query
+    </a>
+  </div>
+
+  <!-- Queries List -->
+  {% if queries %}
+    <div class="space-y-4">
+      {% for q in queries %}
+      <div class="bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition">
+
+        <!-- Top Row -->
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-sm font-medium text-gray-500">
+            {{ q.query_type }}
+          </span>
+
+{% if q.reply %}
+  <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+    Resolved
+  </span>
+{% else %}
+  <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">
+    Pending
+  </span>
+{% endif %}
+
+        </div>
+
+        <!-- Query Message -->
+        <p class="text-gray-800 mb-3">
+          <b>Query:</b> {{ q.message }}
+        </p>
+
+        <!-- Admin Reply -->
+        <div class="bg-gray-50 border-l-4 border-indigo-500 p-3 rounded">
+          <p class="text-sm text-gray-700">
+            <b>Admin Reply:</b>
+            {% if q.reply %}
+              {{ q.reply }}
+            {% else %}
+              <span class="italic text-gray-400">Awaiting response</span>
+            {% endif %}
+          </p>
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <!-- Empty State -->
+    <div class="bg-white rounded-xl shadow p-6 text-center">
+      <p class="text-gray-600 mb-4">You have not raised any queries yet.</p>
+      <a href="/student/query"
+         class="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+        Raise Your First Query
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+
+</body>
+</html>

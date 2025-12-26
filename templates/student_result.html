@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exam Results - HIRA IST</title>
+<link rel="icon" type="image/x-icon" href="../static/image/hira_logo.png">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  /* PDF content styling */
+  .pdf-content {
+    font-family: sans-serif;
+    line-height: 1.15;
+    margin: 0;
+    padding: 0.3in 0.3in 0.2in 0.3in; /* top, right, bottom, left */
+  }
+
+  .pdf-table th, .pdf-table td {
+    padding: 3px 5px;
+    border: 1px solid #ccc;
+    font-size: 10px;
+  }
+
+  .pdf-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .page-break {
+    page-break-inside: avoid; /* Prevent splitting tables or sections */
+  }
+
+  canvas {
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* Remove zoom for printing */
+  @media print {
+    body {
+      zoom: 1;
+    }
+  }
+</style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-white to-indigo-100 min-h-screen font-sans">
+
+<!-- Wrapper to remove extra top space -->
+<div id="reportContentWrapper" style="padding:0; margin:0;">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 pdf-content" id="reportContent">
+
+      <!-- Header with Logo -->
+      <div class="flex items-center justify-between mb-6 page-break">
+        <img src="../static/image/hira_logo_main.png" alt="HIRA Logo" class="w-20">
+        <div class="text-center flex-1">
+          <h2 class="text-3xl font-extrabold text-indigo-700">Examination Results</h2>
+          <p class="text-gray-600 mt-1">Academic Performance Overview</p>
+        </div>
+      </div>
+
+      <!-- Student Info -->
+      <div class="bg-white rounded-2xl shadow-md p-4 mb-4 grid sm:grid-cols-2 gap-3 page-break">
+          <p class="text-gray-700"><span class="font-semibold">Register No:</span> {{ student.register_no }}</p>
+          <p class="text-gray-700"><span class="font-semibold">Name:</span> {{ student.name }}</p>
+          <p><span class="font-semibold text-gray-700">Department:</span> {{ student.department }}</p>
+      </div>
+
+      <!-- Semester Results -->
+      {% for r in all_results %}
+      <div class="semester-box mb-4 bg-white rounded-2xl shadow-md p-3 page-break">
+
+          <h3 class="text-xl font-semibold text-indigo-700 mb-3">Semester {{ r.semester }} Results</h3>
+
+          <!-- Table -->
+          <div class="overflow-x-auto rounded-lg border mb-3 page-break">
+              <table class="pdf-table">
+                  <thead class="bg-indigo-100 text-indigo-700">
+                      <tr>
+                          <th>Code</th>
+                          <th>Subject</th>
+                          <th>Credit</th>
+                          <th>Grade</th>
+                          <th>Attendance</th>
+                          <th>Result</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for s in r.subjects %}
+                      <tr>
+                          <td>{{ s.code }}</td>
+                          <td>{{ s.name }}</td>
+                          <td class="text-center">{{ s.credit }}</td>
+                          <td class="text-center font-semibold">{{ s.grade }}</td>
+                          <td class="text-center">{{ s.attendance_grade }}</td>
+                          <td class="text-center">
+                              {% if s.result == "PASS" %}
+                              <span class="px-2 py-1 rounded-full bg-green-100 text-green-700 font-semibold text-xs">PASS</span>
+                              {% else %}
+                              <span class="px-2 py-1 rounded-full bg-red-100 text-red-700 font-semibold text-xs">FAIL</span>
+                              {% endif %}
+                          </td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+
+          <!-- Summary Cards -->
+          <div class="grid sm:grid-cols-3 gap-2 mb-3 page-break">
+              <div class="bg-indigo-50 p-3 rounded-xl text-center shadow-sm">
+                  <p class="text-xs text-gray-600">Total Credits</p>
+                  <p class="text-xl font-bold text-indigo-700">{{ r.total_credits }}</p>
+              </div>
+              <div class="bg-indigo-50 p-3 rounded-xl text-center shadow-sm">
+                  <p class="text-xs text-gray-600">GPA</p>
+                  <p class="text-xl font-bold text-indigo-700">{{ r.gpa }}</p>
+              </div>
+              <div class="bg-indigo-50 p-3 rounded-xl text-center shadow-sm">
+                  <p class="text-xs text-gray-600">Final Result</p>
+                  <p class="text-xl font-bold {% if r.final_result == 'PASS' %}text-green-600{% else %}text-red-600{% endif %}">{{ r.final_result }}</p>
+              </div>
+          </div>
+
+      </div>
+      {% endfor %}
+
+      <!-- CGPA -->
+      <div class="bg-white p-3 rounded-xl shadow-sm text-center mb-3 page-break">
+          <p class="text-sm font-semibold text-gray-700">Overall CGPA</p>
+          <p class="text-3xl font-extrabold text-indigo-700 mt-1">{{ cgpa }}</p>
+      </div>
+
+      <!-- Grading Legend -->
+      <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-sm text-gray-700 page-break">
+          <h4 class="font-semibold text-indigo-700 mb-2 text-center">Grading System</h4>
+          <div class="grid sm:grid-cols-2 gap-2">
+              <div>
+                  <p class="font-semibold mb-1">Letter Grade</p>
+                  <div class="flex flex-wrap gap-1">
+                      <span class="px-2 py-1 rounded-full bg-indigo-100 text-xs">O – 10</span>
+                      <span class="px-2 py-1 rounded-full bg-indigo-100 text-xs">A+ – 9</span>
+                      <span class="px-2 py-1 rounded-full bg-indigo-100 text-xs">A – 8</span>
+                      <span class="px-2 py-1 rounded-full bg-indigo-100 text-xs">B+ – 7</span>
+                      <span class="px-2 py-1 rounded-full bg-indigo-100 text-xs">B – 6</span>
+                      <span class="px-2 py-1 rounded-full bg-indigo-100 text-xs">C – 5</span>
+                      <span class="px-2 py-1 rounded-full bg-red-100 text-red-700 text-xs">U – 0</span>
+                      <span class="px-2 py-1 rounded-full bg-gray-200 text-xs">W – 0</span>
+                  </div>
+              </div>
+              <div>
+                  <p class="font-semibold mb-1">Attendance Grade</p>
+                  <div class="space-y-1 text-xs">
+                      <p><b>O:</b> ≥ 95%</p>
+                      <p><b>M:</b> ≥ 85% &lt; 95%</p>
+                      <p><b>S:</b> ≥ 75% &lt; 85%</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Download Button -->
+      <div class="text-center mt-4 page-break">
+          <button onclick="downloadPDF()" class="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition">
+              Download Result PDF
+          </button>
+      </div>
+
+  </div>
+</div>
+
+<script>
+function downloadPDF() {
+    const element = document.getElementById("reportContentWrapper");
+    const opt = {
+        margin: 0.2, // consistent A4 margin
+        filename: "Exam_Result_{{ student.register_no }}.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ['css', 'legacy'] },
+    };
+    html2pdf().set(opt).from(element).save();
+}
+</script>
+
+</body>
+</html>

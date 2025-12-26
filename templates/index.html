@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HIRA Institute of Science and Technology</title>
+<link rel="icon" type="image/x-icon" href="../static/image/hira_logo.png">
+
+<!-- Fonts & Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+* { font-family: 'Poppins', sans-serif; }
+.hero-bg { position:absolute; top:0; left:0; width:100%; height:100%; background-size:cover; background-position:center; filter:brightness(0.55); z-index:1; opacity:0; transition:opacity 1.5s ease-in-out; }
+.card button:hover { background-color:#4d0a0b; transform:translateY(-1px); }
+</style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+<!-- HERO -->
+<section id="hero" class="bg-gradient-to-b from-[#F5F7FF] via-[#fffbee] to-[#E6EFFF] h-full">
+    <header class="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-6 w-full">
+        <a href="#">
+            <h1 class="text-3xl font-bold text-indigo-600">HIRA IST</h1>
+        </a>
+        <nav id="menu"
+            class="max-md:absolute max-md:top-0 max-md:left-0 max-md:overflow-hidden items-center justify-center max-md:h-full max-md:w-0 transition-[width] max-md:bg-white/50 backdrop-blur flex-col md:flex-row flex gap-8 text-gray-900 text-sm font-normal">
+            <a class="hover:text-indigo-600" href="#">Home</a>
+            <a class="hover:text-indigo-600" href="#about">About</a>
+            <a class="hover:text-indigo-600" href="#features">Features</a>
+            <a class="hover:text-indigo-600" href="#contact">Contact</a>
+            <button id="closeMenu" class="md:hidden text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </nav>
+
+        <!-- Admin & Student Buttons -->
+        <div class="hidden md:flex space-x-4">
+            <a class="text-indigo-600 bg-indigo-100 px-5 py-2 rounded-full text-sm font-medium hover:bg-indigo-200 transition" href="/admin">
+                Admin
+            </a>
+            <a class="bg-indigo-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-indigo-700 transition" href="/student/login">
+                Student
+            </a>
+        </div>
+
+        <button id="openMenu" class="md:hidden text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+    </header>
+
+    <main class="flex flex-col md:flex-row items-center max-md:text-center justify-between mt-16 pb-16 px-6 sm:px-10 md:px-24 max-w-7xl mx-auto w-full">
+        <div class="flex flex-col items-center md:items-start">
+            <h1 class="text-gray-900 font-semibold text-3xl sm:text-4xl md:text-5xl max-w-xl " style="line-height: 120%;">
+                Empowering students and professionals in
+                <span class="text-indigo-600">every field</span>
+            </h1>
+            <p class="mt-4 text-gray-600 max-w-md text-sm sm:text-base leading-relaxed " style="text-align: justify;">
+                HIRA Institute of Science and Technology provides high-quality education, modern tools and resources trusted by students and leaders worldwide.
+            </p>
+            <div class="flex flex-col md:flex-row items-center mt-8 gap-3">
+                <a href="/student/login"
+                    class="bg-indigo-600 text-white px-2 pr-2.5 py-2.5 rounded text-sm font-medium flex items-center space-x-2 hover:bg-indigo-700 transition">
+                    Student Login
+                </a>
+                <a href="/admin"
+                    class="bg-indigo-100 text-indigo-600 px-2 pr-2.5 py-2.5 rounded text-sm font-medium flex items-center space-x-2 hover:bg-indigo-200 transition">
+                    Admin Login
+                </a>
+            </div>
+        </div>
+
+        <div aria-label="Photos of students and admins" class="mt-12 grid grid-cols-2 gap-6 pb-6">
+            <img alt="Student" class="w-36 h-44 rounded-lg hover:scale-105 transition duration-300 object-cover flex-shrink-0 shadow-lg"
+                src="https://images.unsplash.com/flagged/photo-1573740144655-bbb6e88fb18a?q=80&w=735&auto=format&fit=crop" />
+            <img alt="Student" class="w-36 h-44 rounded-lg hover:scale-105 transition duration-300 object-cover flex-shrink-0 shadow-lg"
+                src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=687&auto=format&fit=crop" />
+            <img alt="Admin" class="w-36 h-44 rounded-lg hover:scale-105 transition duration-300 object-cover flex-shrink-0 shadow-lg"
+                src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=687&auto=format&fit=crop" />
+            <img alt="Admin" class="w-36 h-44 rounded-lg hover:scale-105 transition duration-300 object-cover flex-shrink-0 shadow-lg"
+                src="https://images.unsplash.com/photo-1546961329-78bef0414d7c?q=80&w=687&auto=format&fit=crop" />
+        </div>
+    </main>
+</section>
+
+<!-- ABOUT -->
+<section class="flex flex-col md:flex-row items-center justify-center gap-10 max-md:px-4 py-20 bg-gray-50" id="about">
+  <!-- Image Card -->
+  <div class="relative shadow-2xl shadow-indigo-600/40 rounded-2xl overflow-hidden shrink-0">
+    <img class="max-w-md w-full object-cover rounded-2xl"
+        src="https://images.unsplash.com/photo-1531497865144-0464ef8fb9a9?q=80&w=451&h=451&auto=format&fit=crop"
+        alt="HIRA IST">
+    <div class="flex items-center gap-1 max-w-72 absolute bottom-8 left-8 bg-white p-4 rounded-xl">
+      <div class="flex -space-x-4 shrink-0">
+          <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200" alt="student1"
+              class="w-9 h-9 rounded-full border-[3px] border-white hover:-translate-y-1 transition z-1">
+          <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200" alt="student2"
+              class="w-9 h-9 rounded-full border-[3px] border-white hover:-translate-y-1 transition z-[2]">
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&h=200&auto=format&fit=crop"
+              alt="student3"
+              class="w-9 h-9 rounded-full border-[3px] border-white hover:-translate-y-1 transition z-[3]">
+          <div
+              class="flex items-center justify-center text-xs text-white w-9 h-9 rounded-full border-[3px] border-white bg-indigo-600 hover:-translate-y-1 transition z-[4]">
+              50+
+          </div>
+      </div>
+      <p class="text-sm font-medium text-slate-800">Join our HIRA IST student community</p>
+    </div>
+  </div>
+
+  <!-- Text Content -->
+  <div class="text-sm text-slate-600 max-w-lg">
+    <h1 class="text-xl uppercase font-semibold text-slate-700">About HIRA Institute of Science and Technology</h1>
+    <div class="w-24 h-[3px] rounded-full bg-gradient-to-r from-indigo-600 to-[#DDD9FF]"></div>
+    <p class="mt-8" style="text-align: justify;">HIRA Academy provides a modern, secure, and scalable academic management platform for students and faculty. Our system ensures smooth management of attendance, results, and student queries.</p>
+    <p class="mt-4" style="text-align: justify;">Students can access their profiles, track academic progress, and communicate with faculty seamlessly, while administrators manage the institution efficiently with robust dashboards and reporting tools.</p>
+    <p class="mt-4" style="text-align: justify;">By combining modern UI design with practical academic functionality, HIRA Academy empowers educational institutions to deliver quality education and enhance student engagement.</p>
+    <a href="#" class="flex items-center w-max gap-2 mt-8 hover:-translate-y-0.5 transition bg-gradient-to-r from-indigo-600 to-[#8A7DFF] py-3 px-8 rounded-full text-white">
+        <span>Read more</span>
+        <svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M12.53 6.53a.75.75 0 0 0 0-1.06L7.757.697a.75.75 0 1 0-1.06 1.06L10.939 6l-4.242 4.243a.75.75 0 0 0 1.06 1.06zM0 6v.75h12v-1.5H0z"
+                fill="#fff" />
+        </svg>
+    </a>
+  </div>
+</section>
+
+
+<!-- FEATURES -->
+<!-- FEATURES SECTION -->
+<section class="py-20 px-4 bg-gray-50" id="features">
+    <div class="max-w-6xl mx-auto text-center mb-16">
+        <h2 class="text-3xl font-bold text-slate-800">Core Features of HIRA IST</h2>
+        <p class="mt-4 text-slate-600 max-w-2xl mx-auto">Our student management system provides all essential tools for administration, students, and faculty to streamline academic activities efficiently.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <!-- Real-Time Attendance -->
+        <div class="flex flex-col items-center justify-center max-w-80 mx-auto">
+            <div class="p-6 aspect-square bg-indigo-100 rounded-full">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 18.667V24.5m4.668-8.167V24.5m4.664-12.833V24.5m2.333-21L15.578 13.587a.584.584 0 0 1-.826 0l-3.84-3.84a.583.583 0 0 0-.825 0L2.332 17.5M4.668 21v3.5m4.664-8.167V24.5" stroke="#7F22FE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="mt-5 space-y-2 text-center">
+                <h3 class="text-base font-semibold text-slate-700">Real-Time Attendance</h3>
+                <p class="text-sm text-slate-600">Track student attendance instantly with live updates for teachers and students.</p>
+            </div>
+        </div>
+
+        <!-- Secure Login -->
+        <div class="flex flex-col items-center justify-center max-w-80 mx-auto">
+            <div class="p-6 aspect-square bg-green-100 rounded-full">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 11.667A2.333 2.333 0 0 0 11.667 14c0 1.19-.117 2.929-.304 4.667m4.972-3.36c0 2.776 0 7.443-1.167 10.36m5.004-1.144c.14-.7.502-2.683.583-3.523M2.332 14a11.667 11.667 0 0 1 21-7m-21 11.667h.01m23.092 0c.233-2.333.152-6.246 0-7" stroke="#00A63E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M5.832 22.75C6.415 21 6.999 17.5 6.999 14a7 7 0 0 1 .396-2.333m2.695 13.999c.245-.77.525-1.54.665-2.333m-.255-15.4A7 7 0 0 1 21 14v2.333" stroke="#00A63E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="mt-5 space-y-2 text-center">
+                <h3 class="text-base font-semibold text-slate-700">Secure Login</h3>
+                <p class="text-sm text-slate-600">Role-based authentication ensures data privacy for students and admins.</p>
+            </div>
+        </div>
+
+        <!-- Student Reports -->
+        <div class="flex flex-col items-center justify-center max-w-80 mx-auto">
+            <div class="p-6 aspect-square bg-orange-100 rounded-full">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4.668 25.666h16.333a2.333 2.333 0 0 0 2.334-2.333V8.166L17.5 2.333H7a2.333 2.333 0 0 0-2.333 2.333v4.667" stroke="#F54900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16.332 2.333V7a2.334 2.334 0 0 0 2.333 2.333h4.667m-21 8.167h11.667M10.5 21l3.5-3.5-3.5-3.5" stroke="#F54900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="mt-5 space-y-2 text-center">
+                <h3 class="text-base font-semibold text-slate-700">Student Reports</h3>
+                <p class="text-sm text-slate-600">Generate detailed academic reports for each student and semester.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<!-- CONTACT SECTION -->
+<section class="bg-gray-50 py-20 px-4" id="contact">
+  <div class="max-w-5xl w-full mx-auto p-10 text-gray-800">
+    <span class="px-2 py-1 text-xs border border-gray-300 rounded-full">Reach Out To Us</span>
+    <h1 class="text-4xl font-bold text-left mt-4">
+        We'd love to hear from you.
+    </h1>
+    <p class="text-left mt-4">
+        Or reach out manually at
+        <a href="mailto:contact@hiraacademy.com" class="text-indigo-600 hover:underline">contact@hiraist.com</a>
+    </p>
+    <div class="grid md:grid-cols-3 mt-16 gap-10">
+        <!-- Email Support -->
+        <div>
+            <svg class="text-indigo-500 bg-indigo-500/20 p-2.5 aspect-square rounded-full w-10 h-10" width="24"
+                height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M21 4.125H3A1.125 1.125 0 0 0 1.875 5.25V18a1.875 1.875 0 0 0 1.875 1.875h16.5A1.875 1.875 0 0 0 22.125 18V5.25A1.125 1.125 0 0 0 21 4.125m-2.892 2.25L12 11.974 5.892 6.375zM4.125 17.625V7.808l7.115 6.522a1.125 1.125 0 0 0 1.52 0l7.115-6.522v9.817z"
+                    fill="currentColor" />
+            </svg>
+            <p class="text-lg font-bold mt-2">Email Support</p>
+            <p class="text-gray-500 mt-1 mb-4">Our team responds during working hours.</p>
+            <a href="mailto:contact@hiraacademy.com" class="text-indigo-600 font-semibold">
+                contact@hiraist.com
+            </a>
+        </div>
+
+        <!-- Office Visit -->
+        <div>
+            <svg class="text-indigo-500 bg-indigo-500/20 p-2.5 aspect-square rounded-full w-10 h-10" width="24"
+                height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M22.875 19.125H21.75V9.309a1.125 1.125 0 0 0-.375-2.184h-3.75V4.809a1.125 1.125 0 0 0-.375-2.184H3.75a1.125 1.125 0 0 0-.375 2.184v14.316H2.25a1.125 1.125 0 1 0 0 2.25h20.625a1.125 1.125 0 1 0 0-2.25M19.5 9.375v9.75h-1.875v-9.75zm-13.875-4.5h9.75v14.25h-1.5V15a1.125 1.125 0 0 0-1.125-1.125h-4.5A1.125 1.125 0 0 0 7.125 15v4.125h-1.5zm6 14.25h-2.25v-3h2.25zM6.75 7.5a1.125 1.125 0 0 1 1.125-1.125h.75a1.125 1.125 0 0 1 0 2.25h-.75A1.125 1.125 0 0 1 6.75 7.5"
+                    fill="currentColor" />
+            </svg>
+            <p class="text-lg font-bold mt-2">Visit Our Institution</p>
+            <p class="text-gray-500 mt-1 mb-4">Come see us in person at HIRA IST.</p>
+            <span class="text-indigo-600 font-semibold">
+                123 Knowledge Drive, New Delhi, India
+            </span>
+        </div>
+
+        <!-- Call Support -->
+        <div>
+            <svg class="text-indigo-500 bg-indigo-500/20 p-2.5 aspect-square rounded-full w-10 h-10" width="21"
+                height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="m19 13.513-4.415-1.98-.017-.007a1.87 1.87 0 0 0-1.886.243l-2.091 1.781c-1.22-.66-2.478-1.91-3.14-3.113l1.787-2.125q.043-.051.08-.108a1.88 1.88 0 0 0 .148-1.782L7.488 2A1.88 1.88 0 0 0 5.539.89 5.65 5.65 0 0 0 .625 6.5c0 7.651 6.224 13.875 13.875 13.875a5.65 5.65 0 0 0 5.61-4.914A1.88 1.88 0 0 0 19 13.513"
+                    fill="currentColor" />
+            </svg>
+            <p class="text-lg font-bold mt-2">Call Us Directly</p>
+            <p class="text-gray-500 mt-1 mb-4">Available during working hours.</p>
+            <span class="text-indigo-600 font-semibold">
+                (+91) 98765-43210
+            </span>
+        </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<!-- FOOTER -->
+<footer class="relative overflow-hidden px-6 md:px-16 lg:px-24 xl:px-32 w-full text-sm text-slate-500 bg-white pt-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14">
+        <!-- Logo & Description -->
+        <div class="sm:col-span-2 lg:col-span-1">
+            <a href="#">
+                <h1 class="text-3xl font-bold text-indigo-600">HIRA IST</h1>
+            </a>
+            <p class="text-sm/7 mt-6" style="text-align: justify;">
+                HIRA Institute of Science and Technology is committed to providing top-notch education, empowering students with modern learning tools, and fostering a vibrant academic community.
+            </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="flex flex-col lg:items-center lg:justify-center">
+            <div class="flex flex-col text-sm space-y-2.5">
+                <h2 class="font-semibold mb-5 text-gray-800">Quick Links</h2>
+                <a class="hover:text-slate-600 transition" href="#">About Us</a>
+                <a class="hover:text-slate-600 transition" href="#">Admissions</a>
+                <a class="hover:text-slate-600 transition" href="#">Courses</a>
+                <a class="hover:text-slate-600 transition" href="#">Contact Us</a>
+            </div>
+        </div>
+
+        <!-- Newsletter -->
+        <div>
+            <h2 class="font-semibold text-gray-800 mb-5">Subscribe to our newsletter</h2>
+            <div class="text-sm space-y-6 max-w-sm">
+                <p>Get the latest updates, announcements, and academic news directly in your inbox.</p>
+                <div class="flex items-center">
+                    <input class="rounded-l-md bg-gray-100 outline-none w-full max-w-64 h-11 px-3" type="email" placeholder="Enter your email">
+                    <button class="bg-gradient-to-b from-indigo-600 to-indigo-800 cursor-pointer hover:from-indigo-700 hover:to-indigo-900 transition px-4 h-11 text-white rounded-r-md">
+                        Subscribe
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 py-4 border-t mt-6 border-slate-200">
+        <p class="text-center">
+            © 2025 HIRA IST. All Rights Reserved.
+        </p>
+        <div class="flex items-center gap-4">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Cookie Policy</a>
+        </div>
+    </div>
+</footer>
+
+
+<script>
+// Hero slideshow
+   const openMenu = document.getElementById('openMenu');
+    const closeMenu = document.getElementById('closeMenu');
+    const menu = document.getElementById('menu');
+    const hero = document.getElementById('hero');
+
+    openMenu.addEventListener('click', () => {
+        menu.classList.remove('max-md:w-0');
+        menu.classList.add('max-md:w-full');
+        hero.classList.add('overflow-hidden');
+    });
+
+    closeMenu.addEventListener('click', () => {
+        menu.classList.remove('max-md:w-full');
+        menu.classList.add('max-md:w-0');
+        hero.classList.remove('overflow-hidden');
+    });
+</script>
+
+</body>
+</html>

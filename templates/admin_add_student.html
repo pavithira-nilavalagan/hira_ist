@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Students - HIRA IST</title>
+  <link rel="icon" type="image/x-icon" href="../static/image/hira_logo.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+<div class="max-w-6xl mx-auto mt-10 p-6">
+
+
+  <!-- Add Student Form -->
+  <div class="mb-10">
+    <h2 class="text-3xl font-bold text-green-600 mb-6 text-center">
+      Add Student Details
+    </h2>
+    <form method="POST" class="bg-white p-6 rounded-xl shadow-lg grid grid-cols-1 gap-4 md:grid-cols-2">
+      <input type="text" name="register_no" placeholder="Register Number" required
+        class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none">
+      <input type="text" name="name" placeholder="Student Name" required
+        class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none">
+      <input type="email" name="email" placeholder="Email" required
+        class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none">
+      <input type="password" name="password" placeholder="Login Password" required
+        class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none">
+      <input type="text" name="department" placeholder="Department" required
+        class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none">
+      <input type="text" name="batch" placeholder="Batch (e.g. 2023-2025)" required
+        class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none">
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-1">Date of Birth</label>
+        <input type="date" name="dob" required
+          class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-1">Gender</label>
+        <select name="gender" required
+          class="w-full border rounded px-3 py-2 bg-white focus:ring-2 focus:ring-green-500 outline-none">
+          <option value="">Select</option>
+          <option>Male</option>
+          <option>Female</option>
+        </select>
+      </div>
+      <button type="submit"
+        class="col-span-2 bg-green-600 text-white py-2 rounded-lg font-medium hover:bg-green-700 transition">
+        Add Student
+      </button>
+    </form>
+  </div>
+
+  <!-- Manage Students Table -->
+  <div>
+    <h2 class="text-3xl font-bold text-blue-600 mb-6 text-center">Manage Students</h2>
+
+    <div class="mb-4 flex justify-between items-center">
+      <input type="text" id="searchInput" placeholder="Search by name, reg no, dept, batch..."
+        class="border rounded px-3 py-2 w-full md:w-1/2 focus:ring-2 focus:ring-blue-500 outline-none"
+        onkeyup="searchTable()">
+    </div>
+
+    <div class="overflow-x-auto bg-white rounded-xl shadow-md">
+      <table class="min-w-full divide-y divide-gray-200" id="studentsTable">
+        <thead class="bg-blue-100">
+          <tr>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Register No</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Name</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Email</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Department</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Batch</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">DOB</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Gender</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          {% for student in students %}
+          <tr>
+            <td class="px-4 py-2">{{ student.register_no }}</td>
+            <td class="px-4 py-2">{{ student.name }}</td>
+            <td class="px-4 py-2">{{ student.email }}</td>
+            <td class="px-4 py-2">{{ student.department }}</td>
+            <td class="px-4 py-2">{{ student.batch }}</td>
+            <td class="px-4 py-2">{{ student.dob }}</td>
+            <td class="px-4 py-2">{{ student.gender }}</td>
+<td class="px-4 py-2 text-center">
+  <div class="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-2">
+    <a href="#" onclick='openEditModal({{ student | tojson }})'
+       class="w-full sm:w-auto text-center px-2 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500">
+      Edit
+    </a>
+    <a href="{{ url_for('admin_delete_student', register_no=student.register_no) }}"
+       onclick="return confirm('Are you sure you want to delete this student?');"
+       class="w-full sm:w-auto text-center px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+      Delete
+    </a>
+  </div>
+</td>
+
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+  <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-4 text-center">Edit Student</h2>
+    <form id="editForm" method="POST">
+      <input type="text" name="register_no" id="edit_register_no" readonly
+             class="w-full border rounded px-3 py-2 mb-2 bg-gray-100">
+      <input type="text" name="name" id="edit_name" placeholder="Student Name" required
+             class="w-full border rounded px-3 py-2 mb-2">
+      <input type="email" name="email" id="edit_email" placeholder="Email" required
+             class="w-full border rounded px-3 py-2 mb-2">
+      <input type="text" name="department" id="edit_department" placeholder="Department" required
+             class="w-full border rounded px-3 py-2 mb-2">
+      <input type="text" name="batch" id="edit_batch" placeholder="Batch" required
+             class="w-full border rounded px-3 py-2 mb-2">
+      <input type="date" name="dob" id="edit_dob" required
+             class="w-full border rounded px-3 py-2 mb-2">
+      <select name="gender" id="edit_gender" required
+              class="w-full border rounded px-3 py-2 mb-4">
+        <option value="">Select</option>
+        <option>Male</option>
+        <option>Female</option>
+      </select>
+      <div class="flex justify-end space-x-2">
+        <button type="button" onclick="closeModal()"
+                class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400">Cancel</button>
+        <button type="submit"
+                class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openEditModal(student) {
+  document.getElementById('edit_register_no').value = student.register_no;
+  document.getElementById('edit_name').value = student.name;
+  document.getElementById('edit_email').value = student.email;
+  document.getElementById('edit_department').value = student.department;
+  document.getElementById('edit_batch').value = student.batch;
+  document.getElementById('edit_dob').value = student.dob;
+  document.getElementById('edit_gender').value = student.gender;
+
+  document.getElementById('editForm').action = `/admin/update-student/${student.register_no}`;
+  document.getElementById('editModal').classList.remove('hidden');
+}
+
+function closeModal() {
+  document.getElementById('editModal').classList.add('hidden');
+}
+
+function searchTable() {
+  const input = document.getElementById('searchInput').value.toLowerCase();
+  const rows = document.querySelectorAll('#studentsTable tbody tr');
+
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    row.style.display = text.includes(input) ? '' : 'none';
+  });
+}
+</script>
+
+</body>
+</html>

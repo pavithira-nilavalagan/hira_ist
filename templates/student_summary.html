@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Summary - HIRA IST</title>
+<link rel="icon" type="image/x-icon" href="../static/image/hira_logo.png">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+.pdf-content { font-family: sans-serif; line-height:1.15; margin:0; padding:0.2in; }
+.pdf-table th, .pdf-table td { padding:3px 5px; border:1px solid #ccc; font-size:10px; }
+.pdf-table { border-collapse: collapse; width:100%; }
+.page-break { page-break-inside: avoid; margin-bottom: 20px; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-white to-indigo-100 min-h-screen font-sans">
+
+<div id="pdfWrapper" class="max-w-6xl mx-auto px-4 sm:px-6 py-8 pdf-content">
+
+  <!-- Logo Header -->
+  <div class="flex items-center justify-center mb-6 page-break">
+    <img src="../static/image/hira_logo_main.png" alt="HIRA Logo" class="w-24">
+  </div>
+
+  <!-- Profile Section -->
+  <div class="bg-white shadow-xl rounded-2xl p-8 mb-10 page-break">
+    <div class="flex items-center gap-4 mb-6">
+      <div class="w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center text-2xl font-bold">
+        {{ student.name[0] }}
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">Student Profile</h2>
+        <p class="text-gray-500 text-sm">Personal & Academic Information</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-indigo-50 p-4 rounded-lg"><p class="text-sm text-gray-500">Register No</p><p class="font-semibold text-gray-800">{{ student.register_no }}</p></div>
+      <div class="bg-indigo-50 p-4 rounded-lg"><p class="text-sm text-gray-500">Name</p><p class="font-semibold text-gray-800">{{ student.name }}</p></div>
+      <div class="bg-indigo-50 p-4 rounded-lg"><p class="text-sm text-gray-500">Email</p><p class="font-semibold text-gray-800">{{ student.email }}</p></div>
+      <div class="bg-indigo-50 p-4 rounded-lg"><p class="text-sm text-gray-500">Department</p><p class="font-semibold text-gray-800">{{ student.department }}</p></div>
+      <div class="bg-indigo-50 p-4 rounded-lg"><p class="text-sm text-gray-500">Batch</p><p class="font-semibold text-gray-800">{{ student.batch }}</p></div>
+      <div class="bg-indigo-50 p-4 rounded-lg"><p class="text-sm text-gray-500">DOB</p><p class="font-semibold text-gray-800">{{ student.dob }}</p></div>
+      <div class="bg-indigo-50 p-4 rounded-lg"><p class="text-sm text-gray-500">Gender</p><p class="font-semibold text-gray-800">{{ student.gender }}</p></div>
+    </div>
+  </div>
+
+  <!-- Attendance Section -->
+  <div class="bg-white rounded-2xl shadow-xl p-8 mb-10 page-break">
+    <h2 class="text-2xl font-bold text-indigo-700 mb-6">Attendance Overview</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-collapse text-sm pdf-table">
+        <thead class="bg-indigo-100 text-indigo-700">
+          <tr>
+            <th>Subject</th><th>Semester</th><th>Total Classes</th><th>Attended</th><th>Percentage</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in attendance %}
+          <tr class="text-center hover:bg-gray-50 transition">
+            <td>{{ a.subject }}</td>
+            <td>{{ a.semester }}</td>
+            <td>{{ a.total_classes }}</td>
+            <td>{{ a.attended_classes }}</td>
+            <td>{{ a.attendance_percentage|default(0) }}%</td>
+            <td>{% if a.attendance_percentage >= 95 %}Excellent{% elif a.attendance_percentage >=85 %}Good{% elif a.attendance_percentage >=75 %}Average{% else %}Shortage{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Exam Results Section -->
+  <div class="bg-white rounded-2xl shadow-xl p-8 mb-10 page-break">
+    <h2 class="text-2xl font-bold text-indigo-700 mb-6">Examination Results</h2>
+
+    {% for r in all_results %}
+    <div class="mb-6 page-break">
+      <h3 class="text-xl font-semibold text-indigo-700 mb-2">Semester {{ r.semester }}</h3>
+      <table class="min-w-full border-collapse text-sm pdf-table mb-4">
+        <thead class="bg-indigo-100 text-indigo-700">
+          <tr>
+            <th>Code</th><th>Subject</th><th>Credit</th><th>Grade</th><th>Attendance</th><th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in r.subjects %}
+          <tr>
+            <td>{{ s.code }}</td>
+            <td>{{ s.name }}</td>
+            <td class="text-center">{{ s.credit }}</td>
+            <td class="text-center font-semibold">{{ s.grade }}</td>
+            <td class="text-center">{{ s.attendance_grade }}</td>
+            <td class="text-center">{% if s.result=="PASS" %}PASS{% else %}FAIL{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <div class="bg-indigo-50 p-4 rounded-xl text-center shadow-sm"><p>Total Credits</p><p>{{ r.total_credits }}</p></div>
+        <div class="bg-indigo-50 p-4 rounded-xl text-center shadow-sm"><p>GPA</p><p>{{ r.gpa }}</p></div>
+        <div class="bg-indigo-50 p-4 rounded-xl text-center shadow-sm"><p>Final Result</p><p>{{ r.final_result }}</p></div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="mt-6 text-center page-break">
+      <p>Overall CGPA</p>
+      <p>{{ cgpa }}</p>
+    </div>
+  </div>
+
+  <!-- Queries Section -->
+  <div class="bg-white rounded-2xl shadow-xl p-8 mb-10 page-break">
+    <h2 class="text-2xl font-bold text-indigo-700 mb-6">My Queries</h2>
+    {% if queries %}
+      {% for q in queries %}
+      <div class="mb-4 border-l-4 {% if q.reply %}border-green-500{% else %}border-yellow-500{% endif %} p-4">
+        <p><b>Query:</b> {{ q.message }}</p>
+        <p><b>Reply:</b> {% if q.reply %}{{ q.reply }}{% else %}Awaiting{% endif %}</p>
+      </div>
+      {% endfor %}
+    {% else %}<p>No queries raised.</p>{% endif %}
+  </div>
+
+  <!-- Download PDF Button -->
+  <div class="flex justify-center mb-10">
+    <button onclick="downloadPDF()" class="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">Download Full PDF</button>
+  </div>
+
+</div>
+
+<script>
+function downloadPDF(){
+  const element = document.getElementById("pdfWrapper");
+  html2pdf().set({
+    margin:0.2, // A4 margins
+    filename:"Student_Summary_{{ student.register_no }}.pdf",
+    image:{type:"jpeg",quality:0.98},
+    html2canvas:{scale:2,useCORS:true,scrollY:0},
+    jsPDF:{unit:"in",format:"a4",orientation:"portrait"}
+  }).from(element).save();
+}
+</script>
+
+</body>
+</html>

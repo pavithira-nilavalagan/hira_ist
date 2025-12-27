@@ -100,12 +100,16 @@
   </div>
 
   <!-- Chart -->
-  <div class="bg-white rounded-xl shadow-md p-3 mb-4 page-break">
-    <h3 class="font-semibold text-center text-sm mb-2">
-      Department-wise Students
-    </h3>
-    <canvas id="deptPieChart" width="300" height="300"></canvas>
+<div class="bg-white rounded-xl shadow-md p-3 mb-4 page-break">
+  <h3 class="font-semibold text-center text-sm mb-2">
+    Department-wise Students
+  </h3>
+
+  <div class="relative w-full max-w-md mx-auto aspect-square">
+    <canvas id="deptPieChart"></canvas>
   </div>
+</div>
+
 
   <!-- Table -->
   <div class="bg-white rounded-xl shadow-md p-3 overflow-x-auto page-break">
@@ -165,24 +169,33 @@
   const deptLabels = {{ department_students | map(attribute='_id') | list | tojson }};
   const deptData = {{ department_students | map(attribute='student_count') | list | tojson }};
 
-  new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: deptLabels,
-      datasets: [{
-        data: deptData,
-        backgroundColor: [
-          '#6366F1','#F87171','#34D399','#FBBF24',
-          '#60A5FA','#F472B6','#A78BFA','#22C55E'
-        ]
-      }]
-    },
-    options: {
-      plugins: {
-        legend: { position: 'bottom' }
+new Chart(ctx, {
+  type: 'pie',
+  data: {
+    labels: deptLabels,
+    datasets: [{
+      data: deptData,
+      backgroundColor: [
+        '#6366F1','#F87171','#34D399','#FBBF24',
+        '#60A5FA','#F472B6','#A78BFA','#22C55E'
+      ]
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          boxWidth: 14,
+          padding: 12
+        }
       }
     }
-  });
+  }
+});
+
 
   document.getElementById('downloadPdf').addEventListener('click', () => {
     html2pdf().set({
@@ -197,3 +210,4 @@
 
 </body>
 </html>
+

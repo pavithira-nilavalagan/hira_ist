@@ -100,15 +100,18 @@
   </div>
 
   <!-- Chart -->
+<!-- Chart -->
 <div class="bg-white rounded-xl shadow-md p-3 mb-4 page-break">
   <h3 class="font-semibold text-center text-sm mb-2">
     Department-wise Students
   </h3>
 
-  <div class="relative w-full max-w-md mx-auto aspect-square">
-    <canvas id="deptPieChart"></canvas>
+  <!-- Responsive Chart Wrapper -->
+  <div class="relative w-full mx-auto max-w-sm h-[260px] sm:h-[320px]">
+    <canvas id="deptPieChart" class="!w-full !h-full"></canvas>
   </div>
 </div>
+
 
 
   <!-- Table -->
@@ -181,20 +184,23 @@ new Chart(ctx, {
       ]
     }]
   },
-  options: {
-    responsive: true,
-    maintainAspectRatio: true,
-    plugins: {
-      legend: {
-        position: 'bottom',
-        labels: {
-          boxWidth: 14,
-          padding: 12
+options: {
+  responsive: true,
+  maintainAspectRatio: false, // ⭐ VERY IMPORTANT
+  plugins: {
+    legend: {
+      position: 'bottom',
+      labels: {
+        boxWidth: 12,
+        padding: 10,
+        font: {
+          size: 11
         }
       }
     }
   }
-});
+}
+);
 
 
   document.getElementById('downloadPdf').addEventListener('click', () => {
@@ -210,4 +216,5 @@ new Chart(ctx, {
 
 </body>
 </html>
+
 

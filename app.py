@@ -71,13 +71,21 @@ def admin_login():
 def admin_dashboard():
     if "admin" not in session:
         return redirect("/admin")
+
     total_students = students.count_documents({})
+
+
     total_queries = queries.count_documents({})
-    total_attendance = attendance.count_documents({})
-    return render_template("admin_dashboard.html",
-                           total_students=total_students,
-                           total_queries=total_queries,
-                           total_attendance=total_attendance)
+    # ✅ COUNT DISTINCT DEPARTMENTS
+    total_departments = len(students.distinct("department"))
+
+
+    return render_template(
+        "admin_dashboard.html",
+        total_students=total_students,
+        total_queries=total_queries,
+        total_departments=total_departments
+    )
 
 @app.route("/admin/add-student", methods=["GET","POST"])
 def admin_add_student():
@@ -448,3 +456,4 @@ def test_insert():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
+

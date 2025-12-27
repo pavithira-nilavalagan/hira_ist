@@ -12,9 +12,9 @@
 
 <style>
   .pdf-content {
-    line-height: 1.15;
-    font-family: sans-serif;
-    padding: 0.3in;
+    font-family: "Inter", sans-serif;
+    line-height: 1.3;
+    padding: 12mm;
   }
 
   .pdf-table {
@@ -23,8 +23,8 @@
   }
 
   .pdf-table th, .pdf-table td {
-    border: 1px solid #ccc;
-    padding: 4px 6px;
+    border: 1px solid #e5e7eb;
+    padding: 6px;
     font-size: 11px;
   }
 
@@ -33,17 +33,10 @@
   }
 
   canvas {
-    display: block;
-    margin: 0 auto;
+    margin: auto;
   }
 
-  /* Screen view logo centered */
-  .pdf-logo {
-    display: block;
-    margin: 0 auto;
-  }
-
-  /* PRINT / PDF ONLY */
+  /* ===== PDF ONLY ===== */
   @media print {
 
     #downloadPdf {
@@ -51,93 +44,115 @@
     }
 
     .pdf-logo {
-      position: absolute;
+      position: fixed;
       top: 10mm;
       left: 10mm;
-      margin: 0;
+      width: 90px;
     }
 
-    .pdf-content {
-      padding-top: 40mm;
+    .pdf-header {
+      margin-top: 25mm;
+      text-align: center;
     }
   }
 </style>
 </head>
 
-<body class="bg-gray-100 font-sans">
+<body class="bg-slate-100 text-gray-800">
 
-<div class="max-w-6xl mx-auto p-2 pdf-content" id="reportContent">
+<div id="reportContent" class="max-w-7xl mx-auto pdf-content">
 
-  <!-- Logo & Title -->
-  <div class="text-center mb-2 page-break">
-    <img src="../static/image/hira_logo_main.png" alt="HIRA Logo" class="pdf-logo w-28">
-    <h2 class="text-2xl font-bold text-indigo-600 mt-1">Admin Report</h2>
+  <!-- Logo -->
+  <img src="../static/image/hira_logo_main.png"
+       class="pdf-logo mx-auto mb-2 w-28"
+       alt="HIRA Logo">
+
+  <!-- Title -->
+  <div class="pdf-header mb-4">
+    <h2 class="text-2xl font-bold text-indigo-700 tracking-wide">
+      Admin Report
+    </h2>
   </div>
 
   <!-- Summary Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-2 page-break">
-    <div class="bg-white rounded-xl shadow p-2 text-center">
-      <p class="text-2xl mb-1">🎓</p>
-      <h3 class="font-semibold text-gray-700">Total Students</h3>
-      <p class="font-bold text-indigo-600">{{ total_students }}</p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-4 page-break">
+
+    <div class="bg-white rounded-xl shadow-md p-3 text-center border-t-4 border-indigo-600">
+      <p class="text-2xl">🎓</p>
+      <h3 class="font-semibold text-sm text-gray-600">Total Students</h3>
+      <p class="text-xl font-bold text-indigo-700">{{ total_students }}</p>
     </div>
 
-    <div class="bg-white rounded-xl shadow p-2 text-center">
-      <p class="text-2xl mb-1">❗</p>
-      <h3 class="font-semibold text-gray-700">Total Queries</h3>
-      <p class="font-bold text-indigo-600">{{ total_queries }}</p>
+    <div class="bg-white rounded-xl shadow-md p-3 text-center border-t-4 border-rose-500">
+      <p class="text-2xl">❗</p>
+      <h3 class="font-semibold text-sm text-gray-600">Total Queries</h3>
+      <p class="text-xl font-bold text-rose-600">{{ total_queries }}</p>
     </div>
 
-    <div class="bg-white rounded-xl shadow p-2 text-center">
-      <p class="text-2xl mb-1">🏢</p>
-      <h3 class="font-semibold text-gray-700">Total Departments</h3>
-      <p class="font-bold text-indigo-600">{{ department_students|length }}</p>
+    <div class="bg-white rounded-xl shadow-md p-3 text-center border-t-4 border-emerald-500">
+      <p class="text-2xl">🏢</p>
+      <h3 class="font-semibold text-sm text-gray-600">Departments</h3>
+      <p class="text-xl font-bold text-emerald-600">
+        {{ department_students|length }}
+      </p>
     </div>
+
   </div>
 
-  <!-- Pie Chart -->
-  <div class="bg-white rounded-xl shadow p-2 mb-2 page-break">
-    <h3 class="font-semibold mb-1 text-center">Department-wise Students</h3>
+  <!-- Chart -->
+  <div class="bg-white rounded-xl shadow-md p-3 mb-4 page-break">
+    <h3 class="font-semibold text-center text-sm mb-2">
+      Department-wise Students
+    </h3>
     <canvas id="deptPieChart" width="300" height="300"></canvas>
   </div>
 
   <!-- Table -->
-  <div class="bg-white rounded-xl shadow p-2 overflow-x-auto mb-2 page-break">
-    <h3 class="font-semibold mb-1">Department Students List</h3>
+  <div class="bg-white rounded-xl shadow-md p-3 overflow-x-auto page-break">
+
+    <h3 class="font-semibold text-sm mb-2">
+      Department Students List
+    </h3>
+
     <table class="pdf-table">
       <thead class="bg-gray-100">
         <tr>
-          <th>Register Number</th>
+          <th>Register No</th>
           <th>Name</th>
           <th>Department</th>
-          <th>Results Published</th>
-          <th>Attendance Posted</th>
-          <th>Query Status</th>
+          <th>Results</th>
+          <th>Attendance</th>
+          <th>Query</th>
         </tr>
       </thead>
       <tbody>
         {% for s in report %}
-        <tr class="student-row" data-department="{{ s.department }}">
+        <tr>
           <td>{{ s.register_no }}</td>
           <td>{{ s.name }}</td>
           <td>{{ s.department }}</td>
-          <td class="text-center">{% if s.result_summary|length > 0 %}Published{% else %}Pending{% endif %}</td>
-          <td class="text-center">{% if s.attendance_posted %}Posted{% else %}Pending{% endif %}</td>
+          <td class="text-center">
+            {% if s.result_summary|length > 0 %}Published{% else %}Pending{% endif %}
+          </td>
+          <td class="text-center">
+            {% if s.attendance_posted %}Posted{% else %}Pending{% endif %}
+          </td>
           <td class="text-center">
             {% if s.query_status %}
-              {% if s.query_status == "Pending" %}⏳ Pending{% elif s.query_status == "Replied" %}✅ Replied{% endif %}
+              {% if s.query_status == "Pending" %}⏳ Pending{% else %}✅ Replied{% endif %}
             {% else %}-{% endif %}
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+
   </div>
 
-  <!-- Download Button (screen only) -->
-  <div class="text-center mb-2 page-break">
+  <!-- Button (Screen Only) -->
+  <div class="text-center mt-4">
     <button id="downloadPdf"
-      class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+      class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg shadow transition">
       Download PDF
     </button>
   </div>
@@ -158,27 +173,23 @@
         data: deptData,
         backgroundColor: [
           '#6366F1','#F87171','#34D399','#FBBF24',
-          '#60A5FA','#F472B6','#A78BFA','#FBBF24'
+          '#60A5FA','#F472B6','#A78BFA','#22C55E'
         ]
       }]
     },
     options: {
-      responsive: true,
       plugins: {
-        legend: {
-          position: 'bottom',
-          labels: { boxWidth: 20, padding: 10 }
-        }
+        legend: { position: 'bottom' }
       }
     }
   });
 
   document.getElementById('downloadPdf').addEventListener('click', () => {
     html2pdf().set({
-      margin: [10,10,10,10],
+      margin: 10,
       filename: 'Admin_Report.pdf',
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+      html2canvas: { scale: 2, useCORS: true },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     }).from(document.getElementById('reportContent')).save();
   });

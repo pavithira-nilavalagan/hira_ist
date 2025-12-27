@@ -65,9 +65,9 @@
         <p class="text-gray-600 mt-1">{{total_queries}}</p>
       </div>
       <div class="bg-white p-6 rounded-lg shadow flex flex-col items-center">
-        <span class="text-3xl mb-2">📝</span>
-        <h3 class="text-lg font-semibold">Attendance</h3>
-        <p class="text-gray-600 mt-1">{{total_attendance}}</p>
+        <span class="text-3xl mb-2">🏢</span>
+        <h3 class="text-lg font-semibold">Total Departments</h3>
+        <p class="text-gray-600 mt-1">{{ department_students|length }}</p>
       </div>
     </div>
 
@@ -78,22 +78,22 @@
     <!-- Upload Results Page -->
 <!-- Upload Results Page -->
 <section id="upload" class="page">
-  <h2 class="text-3xl font-bold mb-6 text-indigo-600">Upload Student Results</h2>
+  <h2 class="text-3xl font-bold mb-6 text-indigo-600" style="text-align: center;">Upload Student Results</h2>
 
   <div class="bg-white p-6 rounded-lg shadow space-y-6">
 
     <!-- Overview -->
     <div class="space-y-2">
-      <p class="text-gray-700">
+      <p class="text-gray-700" style="text-align: justify;">
         Welcome to the <strong>Upload Results</strong> section. Here, you can upload student semester results
-        in <strong>CSV</strong> or <strong>Excel</strong> format. Click the button below to open the upload page.
+        in <strong>CSV</strong> or <strong>Manual</strong> format. Click the button below to open the upload page.
       </p>
 
-      <p class="text-gray-700">
+      <p class="text-gray-700" style="text-align: justify;">
         Before uploading, please make sure:
       </p>
 
-      <ul class="list-disc list-inside text-gray-700 space-y-1">
+      <ul class="list-disc list-inside text-gray-700 space-y-1" style="text-align: justify;">
         <li>All student data is accurate and matches the registered records.</li>
         <li>The file format is either <strong>CSV</strong> or <strong>Excel</strong>.</li>
         <li>The columns follow this structure:
@@ -108,10 +108,6 @@
         <li>Once uploaded, results can be reviewed and corrected if necessary.</li>
       </ul>
 
-      <p class="text-gray-700">
-        You can also download a <strong>template file</strong> to fill in the results, ensuring proper column order
-        and formatting. This helps prevent errors during upload.
-      </p>
     </div>
 
     <!-- Action Button -->
@@ -325,4 +321,5 @@
   </script>
 
 </body>
+
 </html>  

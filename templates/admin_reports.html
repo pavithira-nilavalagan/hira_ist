@@ -5,30 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Reports - HIRA IST</title>
 <link rel="icon" type="image/x-icon" href="../static/image/hira_logo.png">
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <style>
   .pdf-content {
     line-height: 1.15;
     font-family: sans-serif;
-    margin: 0;
-    padding: 0.3in; /* consistent A4 padding */
-  }
-
-  .pdf-table th, .pdf-table td {
-    padding: 4px 6px;
-    border: 1px solid #ccc;
-    font-size: 11px;
+    padding: 0.3in;
   }
 
   .pdf-table {
-    border-collapse: collapse;
     width: 100%;
+    border-collapse: collapse;
+  }
+
+  .pdf-table th, .pdf-table td {
+    border: 1px solid #ccc;
+    padding: 4px 6px;
+    font-size: 11px;
   }
 
   .page-break {
-    page-break-inside: avoid; /* prevent splitting mid-section */
+    page-break-inside: avoid;
   }
 
   canvas {
@@ -36,18 +37,40 @@
     margin: 0 auto;
   }
 
+  /* Screen view logo centered */
+  .pdf-logo {
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* PRINT / PDF ONLY */
   @media print {
-    body { zoom: 1; }
+
+    #downloadPdf {
+      display: none !important;
+    }
+
+    .pdf-logo {
+      position: absolute;
+      top: 10mm;
+      left: 10mm;
+      margin: 0;
+    }
+
+    .pdf-content {
+      padding-top: 40mm;
+    }
   }
 </style>
 </head>
+
 <body class="bg-gray-100 font-sans">
 
 <div class="max-w-6xl mx-auto p-2 pdf-content" id="reportContent">
 
   <!-- Logo & Title -->
   <div class="text-center mb-2 page-break">
-    <img src="../static/image/hira_logo_main.png" alt="HIRA Logo" class="mx-auto w-28">
+    <img src="../static/image/hira_logo_main.png" alt="HIRA Logo" class="pdf-logo w-28">
     <h2 class="text-2xl font-bold text-indigo-600 mt-1">Admin Report</h2>
   </div>
 
@@ -56,17 +79,19 @@
     <div class="bg-white rounded-xl shadow p-2 text-center">
       <p class="text-2xl mb-1">🎓</p>
       <h3 class="font-semibold text-gray-700">Total Students</h3>
-      <p id="totalStudents" class="font-bold text-indigo-600">{{ total_students }}</p>
+      <p class="font-bold text-indigo-600">{{ total_students }}</p>
     </div>
+
     <div class="bg-white rounded-xl shadow p-2 text-center">
       <p class="text-2xl mb-1">❗</p>
       <h3 class="font-semibold text-gray-700">Total Queries</h3>
-      <p id="totalQueries" class="font-bold text-indigo-600">{{ total_queries }}</p>
+      <p class="font-bold text-indigo-600">{{ total_queries }}</p>
     </div>
+
     <div class="bg-white rounded-xl shadow p-2 text-center">
       <p class="text-2xl mb-1">🏢</p>
       <h3 class="font-semibold text-gray-700">Total Departments</h3>
-      <p id="totalDepartments" class="font-bold text-indigo-600">{{ department_students|length }}</p>
+      <p class="font-bold text-indigo-600">{{ department_students|length }}</p>
     </div>
   </div>
 
@@ -79,7 +104,7 @@
   <!-- Table -->
   <div class="bg-white rounded-xl shadow p-2 overflow-x-auto mb-2 page-break">
     <h3 class="font-semibold mb-1">Department Students List</h3>
-    <table class="pdf-table" id="studentTable">
+    <table class="pdf-table">
       <thead class="bg-gray-100">
         <tr>
           <th>Register Number</th>
@@ -96,8 +121,8 @@
           <td>{{ s.register_no }}</td>
           <td>{{ s.name }}</td>
           <td>{{ s.department }}</td>
-          <td class="text-center">{% if s.result_summary|length > 0 %}✅{% else %}❌{% endif %}</td>
-          <td class="text-center">{% if s.attendance_posted %}✅{% else %}❌{% endif %}</td>
+          <td class="text-center">{% if s.result_summary|length > 0 %}Published{% else %}Pending{% endif %}</td>
+          <td class="text-center">{% if s.attendance_posted %}Posted{% else %}Pending{% endif %}</td>
           <td class="text-center">
             {% if s.query_status %}
               {% if s.query_status == "Pending" %}⏳ Pending{% elif s.query_status == "Replied" %}✅ Replied{% endif %}
@@ -109,9 +134,10 @@
     </table>
   </div>
 
-  <!-- Download Button -->
+  <!-- Download Button (screen only) -->
   <div class="text-center mb-2 page-break">
-    <button id="downloadPdf" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+    <button id="downloadPdf"
+      class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
       Download PDF
     </button>
   </div>
@@ -119,8 +145,8 @@
 </div>
 
 <script>
-  // Pie chart setup
   const ctx = document.getElementById('deptPieChart').getContext('2d');
+
   const deptLabels = {{ department_students | map(attribute='_id') | list | tojson }};
   const deptData = {{ department_students | map(attribute='student_count') | list | tojson }};
 
@@ -130,39 +156,31 @@
       labels: deptLabels,
       datasets: [{
         data: deptData,
-        backgroundColor: ['#6366F1','#F87171','#34D399','#FBBF24','#60A5FA','#F472B6','#A78BFA','#FBBF24']
+        backgroundColor: [
+          '#6366F1','#F87171','#34D399','#FBBF24',
+          '#60A5FA','#F472B6','#A78BFA','#FBBF24'
+        ]
       }]
     },
     options: {
       responsive: true,
-      plugins: { legend: { position: 'bottom', labels: { boxWidth: 20, padding: 10 } } },
-      onClick: (e, elements) => {
-        const rows = document.querySelectorAll('.student-row');
-        if (elements.length > 0) {
-          const index = elements[0].index;
-          const selectedDept = deptLabels[index].trim().toLowerCase();
-          rows.forEach(r => {
-            r.style.display = (r.dataset.department.trim().toLowerCase() === selectedDept) ? '' : 'none';
-          });
-        } else {
-          rows.forEach(r => r.style.display = '');
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { boxWidth: 20, padding: 10 }
         }
       }
     }
   });
 
-  // PDF download
   document.getElementById('downloadPdf').addEventListener('click', () => {
-    const element = document.getElementById('reportContent');
-    const opt = {
-      margin: [10,10,10,10], // mm
+    html2pdf().set({
+      margin: [10,10,10,10],
       filename: 'Admin_Report.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'] }
-    };
-    html2pdf().set(opt).from(element).save();
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    }).from(document.getElementById('reportContent')).save();
   });
 </script>
 

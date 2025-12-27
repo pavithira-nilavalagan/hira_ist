@@ -99,19 +99,16 @@
 
   </div>
 
-  <!-- Chart -->
-<!-- Chart -->
 <div class="bg-white rounded-xl shadow-md p-3 mb-4 page-break">
   <h3 class="font-semibold text-center text-sm mb-2">
     Department-wise Students
   </h3>
 
-  <!-- Responsive Chart Wrapper -->
-<div class="relative w-full mx-auto max-w-sm" style="height:260px;">
-  <canvas id="deptPieChart"></canvas>
+  <div class="relative w-full max-w-md mx-auto aspect-square">
+    <canvas id="deptPieChart"></canvas>
+  </div>
 </div>
 
-</div>
 
 
 
@@ -185,23 +182,21 @@ new Chart(ctx, {
       ]
     }]
   },
-options: {
-  responsive: true,
-  maintainAspectRatio: false, // ⭐ VERY IMPORTANT
-  plugins: {
-    legend: {
-      position: 'bottom',
-      labels: {
-        boxWidth: 12,
-        padding: 10,
-        font: {
-          size: 11
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          boxWidth: 14,
+          padding: 12
         }
       }
     }
   }
-}
-);
+});
+
 
 
   document.getElementById('downloadPdf').addEventListener('click', () => {
@@ -217,6 +212,7 @@ options: {
 
 </body>
 </html>
+
 
 
 
